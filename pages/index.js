@@ -4,6 +4,8 @@ import styled from "styled-components";
 const API_KEY = process.env.NEXT_PUBLIC_API_KEY;
 const API_URL = "https://api.openai.com/v1/chat/completions";
 
+// what is the path of earths orbit around the sun?
+
 const messages = {
 	forChild: [
 		{
