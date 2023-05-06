@@ -59,26 +59,21 @@ export default function Home() {
 		speakInSpanish(data.choices[0].message.content);
 	}
 
-
 	async function speakInSpanish(text) {
 		if ("speechSynthesis" in window) {
 			const utterance = new SpeechSynthesisUtterance(text);
 			utterance.lang = "es-ES";
 
-			const voices = window.speechSynthesis.getVoices()
+			const voices = window.speechSynthesis.getVoices();
 			console.log("voices", voices);
-			voices.length == 0 && alert("No voices")
+			voices.length == 0 && alert("No voices");
 
 			const paulina = voices.find((voice) => voice.name == "Paulina");
 			utterance.voice = paulina;
-			//  && alert('paulina')
-			paulina && alert("paulina");
-
 
 			utterance.volume = 1; // 0 to 1
 			utterance.rate = 1.1; // 0.1 to 10
 			utterance.pitch = 0.6; // 0 to 2
-
 
 			speechSynthesis.speak(utterance);
 		} else {
@@ -88,7 +83,47 @@ export default function Home() {
 
 	const [listening, setListening] = useState(false);
 
-	useEffect(() => {
+	// useEffect(() => {
+	// 	let SpeechRecognition;
+	// 	let recognition;
+
+	// 	if ("SpeechRecognition" in window) {
+	// 		SpeechRecognition = window.SpeechRecognition;
+	// 	} else if ("webkitSpeechRecognition" in window) {
+	// 		SpeechRecognition = window.webkitSpeechRecognition;
+	// 	} else {
+	// 		alert(
+	// 			"La API de SpeechRecognition no es compatible con este navegador. Prueba con Google Chrome o Safari."
+	// 		);
+	// 		return;
+	// 	}
+
+	// 	recognition = new SpeechRecognition();
+	// 	recognition.continuous = true;
+	// 	recognition.interimResults = false;
+	// 	recognition.lang = "es-ES";
+
+	// 	recognition.onresult = (event) => {
+	// 		const currentTranscript =
+	// 			event.results[event.results.length - 1][0].transcript;
+	// 		setPromptValue(currentTranscript);
+	// 		askToGpt(currentTranscript, messagesRef.current);
+	// 	};
+
+	// 	if (listening) {
+	// 		recognition.start();
+	// 	} else {
+	// 		recognition.stop();
+	// 	}
+
+	// 	return () => {
+	// 		recognition.stop();
+	// 	};
+	// }, [listening]);
+
+	const toggleListening = () => {
+		setListening(!listening);
+
 		let SpeechRecognition;
 		let recognition;
 
@@ -115,22 +150,10 @@ export default function Home() {
 			askToGpt(currentTranscript, messagesRef.current);
 		};
 
-		if (listening) {
-			recognition.start();
-		} else {
-			recognition.stop();
-		}
-
-		return () => {
-			recognition.stop();
-		};
-	}, [listening]);
-
-	const toggleListening = () => {
-		setListening(!listening);
+		recognition.start();
 
 		setTimeout(() => {
-			speakInSpanish("Hola, quién anda ahí?");
+		speakInSpanish("Hola, quién anda ahí?");
 		}, 2500);
 	};
 
