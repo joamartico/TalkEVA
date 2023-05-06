@@ -67,9 +67,13 @@ export default function Home() {
 
 			const voices = window.speechSynthesis.getVoices()
 			console.log("voices", voices);
+			voices.length == 0 && alert("No voices")
 
 			const paulina = voices.find((voice) => voice.name == "Paulina");
 			utterance.voice = paulina;
+			//  && alert('paulina')
+			paulina && alert("paulina");
+
 
 			utterance.volume = 1; // 0 to 1
 			utterance.rate = 1.1; // 0.1 to 10
@@ -78,7 +82,7 @@ export default function Home() {
 
 			speechSynthesis.speak(utterance);
 		} else {
-			console.error("This browser does not support the Web Speech API.");
+			alert("This browser does not support the Web Speech API.");
 		}
 	}
 
