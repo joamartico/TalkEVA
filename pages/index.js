@@ -83,61 +83,10 @@ export default function Home() {
 
 	const [listening, setListening] = useState(false);
 
-	// useEffect(() => {
-	// 	let SpeechRecognition;
-	// 	let recognition;
-
-	// 	if ("SpeechRecognition" in window) {
-	// 		SpeechRecognition = window.SpeechRecognition;
-	// 	} else if ("webkitSpeechRecognition" in window) {
-	// 		SpeechRecognition = window.webkitSpeechRecognition;
-	// 	} else {
-	// 		alert(
-	// 			"La API de SpeechRecognition no es compatible con este navegador. Prueba con Google Chrome o Safari."
-	// 		);
-	// 		return;
-	// 	}
-
-	// 	recognition = new SpeechRecognition();
-	// 	recognition.continuous = true;
-	// 	recognition.interimResults = false;
-	// 	recognition.lang = "es-ES";
-
-	// 	recognition.onresult = (event) => {
-	// 		const currentTranscript =
-	// 			event.results[event.results.length - 1][0].transcript;
-	// 		setPromptValue(currentTranscript);
-	// 		askToGpt(currentTranscript, messagesRef.current);
-	// 	};
-
-	// 	if (listening) {
-	// 		recognition.start();
-	// 	} else {
-	// 		recognition.stop();
-	// 	}
-
-	// 	return () => {
-	// 		recognition.stop();
-	// 	};
-	// }, [listening]);
-
-	const toggleListening = () => {
-		setListening(!listening);
-
-		let SpeechRecognition;
+	useEffect(() => {
+		let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
 		let recognition;
-
-		if ("SpeechRecognition" in window) {
-			SpeechRecognition = window.SpeechRecognition;
-		} else if ("webkitSpeechRecognition" in window) {
-			SpeechRecognition = window.webkitSpeechRecognition;
-		} else {
-			alert(
-				"La API de SpeechRecognition no es compatible con este navegador. Prueba con Google Chrome o Safari."
-			);
-			return;
-		}
-
+		
 		recognition = new SpeechRecognition();
 		recognition.continuous = true;
 		recognition.interimResults = false;
@@ -150,10 +99,22 @@ export default function Home() {
 			askToGpt(currentTranscript, messagesRef.current);
 		};
 
-		recognition.start();
+		if (listening) {
+			recognition.start();
+		} else {
+			recognition.stop();
+		}
+
+		return () => {
+			recognition.stop();
+		};
+	}, [listening]);
+
+	const toggleListening = () => {
+		setListening(!listening);
 
 		setTimeout(() => {
-		speakInSpanish("Hola, quién anda ahí?");
+			speakInSpanish("Hola, quién anda ahí?");
 		}, 2500);
 	};
 
