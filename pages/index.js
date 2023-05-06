@@ -59,34 +59,36 @@ export default function Home() {
 		speakInSpanish(data.choices[0].message.content);
 	}
 
-	async function speakInSpanish(text) {
-		if ("speechSynthesis" in window) {
-			const utterance = new SpeechSynthesisUtterance(text);
-			utterance.lang = "es-ES";
+	function speakInSpanish(text) {
+		// if ("speechSynthesis" in window) {
+		const utterance = new SpeechSynthesisUtterance(text);
+		utterance.lang = "es-ES";
 
-			const voices = window.speechSynthesis.getVoices();
-			console.log("voices", voices);
-			voices.length == 0 && alert("No voices");
+		const voices = window.speechSynthesis.getVoices();
+		console.log("voices", voices);
+		voices.length == 0 && alert("No voices");
 
-			const paulina = voices.find((voice) => voice.name == "Paulina");
-			utterance.voice = paulina;
+		const paulina = voices.find((voice) => voice.name == "Paulina");
+		utterance.voice = paulina;
+		console.log("paulina", paulina);
 
-			utterance.volume = 1; // 0 to 1
-			utterance.rate = 1.1; // 0.1 to 10
-			utterance.pitch = 0.6; // 0 to 2
+		utterance.volume = 1; // 0 to 1
+		utterance.rate = 1.1; // 0.1 to 10
+		utterance.pitch = 0.6; // 0 to 2
 
-			speechSynthesis.speak(utterance);
-		} else {
-			alert("This browser does not support the Web Speech API.");
-		}
+		speechSynthesis.speak(utterance);
+		// } else {
+		// 	alert("This browser does not support the Web Speech API.");
+		// }
 	}
 
 	const [listening, setListening] = useState(false);
 
 	useEffect(() => {
-		let SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+		let SpeechRecognition =
+			window.SpeechRecognition || window.webkitSpeechRecognition;
 		let recognition;
-		
+
 		recognition = new SpeechRecognition();
 		recognition.continuous = true;
 		recognition.interimResults = false;
@@ -110,12 +112,12 @@ export default function Home() {
 		};
 	}, [listening]);
 
-	const toggleListening = () => {
-		setListening(!listening);
+	const startListening = () => {
+		setListening(true);
 
 		setTimeout(() => {
 			speakInSpanish("Hola, quién anda ahí?");
-		}, 2500);
+		}, 3500);
 	};
 
 	return (
@@ -131,7 +133,7 @@ export default function Home() {
 					/>
 
 					{!listening && (
-						<div style={{ position: "relative" }}>
+						<button style={{ position: "relative" }} onClick={() => startListening()}>
 							<ion-icon
 								name="mic-outline"
 								size="large"
@@ -147,20 +149,22 @@ export default function Home() {
 									right: 0,
 									bottom: 80,
 								}}
-								onClick={toggleListening}
+								
 							/>
-						</div>
+						</button>
 					)}
 
 					{promptValue}
 
-					{/* {messages.map((message, index) => (
-						<p key={index}>
-						{index}
-						{message.content}
-						</p>
-					))} */}
+					{/* <button
+						onClick={() => {
+							speakInSpanish("Hola, quién anda ahí?");
+						}}
+					>
+						Talk
+					</button> */}
 				</Container>
+
 				<TextArea
 					value={promptValue}
 					onChange={handleChange}
