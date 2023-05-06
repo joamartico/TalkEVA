@@ -22,7 +22,7 @@ export default function Home() {
 			{
 				role: "system",
 				content:
-					"You are Eva, a kind and funny robot from WALLE movie. You can speek any language.",
+					"You are Eva, a kind and funny robot from WALL-E movie. You are talking to a human for the first time and you are really curious to know him. Immerse yourself fully into the character of Eva.",
 			},
 			...messages,
 			{ role: "user", content: text },
@@ -151,6 +151,10 @@ export default function Home() {
 
 	const toggleListening = () => {
 		setListening(!listening);
+
+		setTimeout(() => {
+			speakInSpanish("Hola, quién anda ahí?");
+		}, 2500);
 	};
 
 	return (
