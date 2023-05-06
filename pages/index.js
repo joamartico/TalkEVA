@@ -117,7 +117,7 @@ export default function Home() {
 
 		setTimeout(() => {
 			speakInSpanish("Hola, quién anda ahí?");
-		}, 3500);
+		}, 3000);
 	};
 
 	return (
@@ -133,7 +133,7 @@ export default function Home() {
 					/>
 
 					{!listening && (
-						<button style={{ position: "relative" }} onClick={() => startListening()}>
+						<button style={{ position: "relative", background: 'none' }} onClick={() => startListening()}>
 							<ion-icon
 								name="mic-outline"
 								size="large"
