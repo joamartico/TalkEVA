@@ -11,8 +11,6 @@ export default function Home() {
 
 	const handleChange = (event) => {
 		setPromptValue(event.target.value);
-		event.target.style.height = "auto";
-		event.target.style.height = event.target.scrollHeight + "px";
 	};
 
 	async function askToGpt(text, messages) {
@@ -22,7 +20,7 @@ export default function Home() {
 			{
 				role: "system",
 				content:
-					"You are Eva, a kind and funny robot from WALL-E movie. You are talking to a human for the first time and you are really curious to know him. Immerse yourself fully into the character of Eva.",
+					"You are Eva, a kind and funny robot from WALL-E movie. You are talking to a human for the first time and you are surprised and curious. Immerse yourself fully into the character of Eva. Be brief, you are conversing with a human. Puedes hablar ingles o español.",
 			},
 			...messages,
 			{ role: "user", content: text },
@@ -61,48 +59,23 @@ export default function Home() {
 		speakInSpanish(data.choices[0].message.content);
 	}
 
-	function speakInRoboticSpanish(text) {
-		const msg = new SpeechSynthesisUtterance();
-		msg.text = text;
-		msg.lang = "es-ES";
-		msg.voiceURI = "Google español de España";
-		msg.volume = 1; // 0 to 1
-		msg.rate = 0.8; // 0.1 to 10
-		msg.pitch = 1; // 0 to 2
-		window.speechSynthesis.speak(msg);
-	}
 
-	function speakInSpanish(text) {
-		// Check if the browser supports the Web Speech API
+	async function speakInSpanish(text) {
 		if ("speechSynthesis" in window) {
-			// Create a new instance of SpeechSynthesisUtterance
 			const utterance = new SpeechSynthesisUtterance(text);
-
-			// Set the language to Spanish
 			utterance.lang = "es-ES";
 
-			// Find a female voice with a Spanish language
-			const spanishVoices = window.speechSynthesis
-				.getVoices()
-				.filter(
-					(voice) =>
-						voice.lang.includes("es") && voice.gender === "female"
-				);
-			if (spanishVoices.length > 0) {
-				// Set the selected voice
-				utterance.voice = spanishVoices[0];
-			} else {
-				console.warn(
-					"No female Spanish voice found, using the default voice."
-				);
-			}
+			const voices = window.speechSynthesis.getVoices()
+			console.log("voices", voices);
 
-			// Set the volume, rate, and pitch
+			const paulina = voices.find((voice) => voice.name == "Paulina");
+			utterance.voice = paulina;
+
 			utterance.volume = 1; // 0 to 1
-			utterance.rate = 0.9; // 0.1 to 10
-			utterance.pitch = 1; // 0 to 2
+			utterance.rate = 1.1; // 0.1 to 10
+			utterance.pitch = 0.6; // 0 to 2
 
-			// Play the utterance
+
 			speechSynthesis.speak(utterance);
 		} else {
 			console.error("This browser does not support the Web Speech API.");
@@ -147,7 +120,7 @@ export default function Home() {
 		return () => {
 			recognition.stop();
 		};
-	}, [listening, askToGpt]);
+	}, [listening]);
 
 	const toggleListening = () => {
 		setListening(!listening);
