@@ -7,8 +7,7 @@ const API_URL = "https://api.openai.com/v1/chat/completions";
 export default function Home() {
 	const [promptValue, setPromptValue] = useState("");
 	// const [messages, setMessages] = useState([]);
-	const messagesRef = useRef([]); 
-
+	const messagesRef = useRef([]);
 
 	const handleChange = (event) => {
 		setPromptValue(event.target.value);
@@ -17,7 +16,7 @@ export default function Home() {
 	};
 
 	async function askToGpt(text, messages) {
-		setPromptValue("");
+		// setPromptValue("");
 
 		const newMessages = [
 			{
@@ -135,7 +134,7 @@ export default function Home() {
 		recognition.onresult = (event) => {
 			const currentTranscript =
 				event.results[event.results.length - 1][0].transcript;
-			// setPromptValue(currentTranscript);
+			setPromptValue(currentTranscript);
 			askToGpt(currentTranscript, messagesRef.current);
 		};
 
@@ -147,7 +146,6 @@ export default function Home() {
 
 		return () => {
 			recognition.stop();
-			
 		};
 	}, [listening, askToGpt]);
 
@@ -167,41 +165,44 @@ export default function Home() {
 						}
 					/>
 
-					<div style={{ position: "relative" }}>
-						<ion-icon
-							name="mic-outline"
-							size="large"
-							style={{
-								color: "white",
-								padding: 10,
-								borderRadius: "50%",
-								background:
-									"linear-gradient(to right, #00c6ff, #0072ff)",
-								cursor: "pointer",
-								zIndex: 9,
-								position: "absolute",
-								right: 0,
-								bottom: 80,
-							}}
-							onClick={toggleListening}
-						/>
-					</div>
+					{!listening && (
+						<div style={{ position: "relative" }}>
+							<ion-icon
+								name="mic-outline"
+								size="large"
+								style={{
+									color: "white",
+									padding: 10,
+									borderRadius: "50%",
+									background:
+										"linear-gradient(to right, #00c6ff, #0072ff)",
+									cursor: "pointer",
+									zIndex: 9,
+									position: "absolute",
+									right: 0,
+									bottom: 80,
+								}}
+								onClick={toggleListening}
+							/>
+						</div>
+					)}
 
-					<TextArea
-						value={promptValue}
-						onChange={handleChange}
-						placeholder="Type something..."
-					/>
-
-					<Button onClick={() => askToGpt(promptValue)}>Ask</Button>
+					{promptValue}
 
 					{/* {messages.map((message, index) => (
 						<p key={index}>
-							{index}
-							{message.content}
+						{index}
+						{message.content}
 						</p>
 					))} */}
 				</Container>
+				<TextArea
+					value={promptValue}
+					onChange={handleChange}
+					placeholder="Type something..."
+				/>
+
+				<Button onClick={() => askToGpt(promptValue)}>Ask</Button>
 			</ion-content>
 		</>
 	);
@@ -219,6 +220,7 @@ const Container = styled.div`
 	flex-direction: column;
 	font-size: 16px;
 	line-height: 30px;
+	overflow-y: scroll;
 `;
 
 const GradientTitle = styled.h1`
@@ -238,10 +240,12 @@ const Gif = styled.img`
 	height: 100%;
 	margin-top: -130px;
 	z-index: -5;
+	// dont deform
+	object-fit: cover;
 `;
 
 const TextArea = styled.textarea`
-	margin-top: -50px;
+	margin-top: 200px;
 	width: 100%;
 	min-height: 60px;
 	padding: 10px;
@@ -253,7 +257,7 @@ const TextArea = styled.textarea`
 	&:focus {
 		outline: none;
 	}
-	margin-bottom: 15px;
+	/* margin-bottom: 15px; */
 `;
 
 const Button = styled.button`
@@ -271,5 +275,7 @@ const Button = styled.button`
 	font-size: 16px;
 	font-weight: bold;
 	font-family: "Montserrat", "Open Sans", sans-serif;
-	margin-bottom: 40px;
+	margin-top: 10px;
+	width: 100%;
+	margin-bottom: 20px;
 `;
